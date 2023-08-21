@@ -28,6 +28,7 @@ def encrypt(file_name,key_file):
     fernet = Fernet(key)
     with open(file_name,'rb') as file:
         org = file.read()
+
     if org[:len(magic)] == magic:
         raise ValueError('Already Encrypted')
     encrypted = fernet.encrypt(org)

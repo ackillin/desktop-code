@@ -3,7 +3,7 @@ import prims
 
 HOST = "ackillin.net"
 PORT = 45506
-#USERNAME = input("Username? ")
+USERNAME = input("Username? ")
 
 def diffie(conn,bits = 16):
     #Send two public numbers (large prime, and a root prime)
@@ -33,7 +33,7 @@ def main_connection():
         s.connect((HOST,PORT))
         key = diffie(s)
         print(key)
-        s.sendall(USERNAME.encode())
+        s.sendall(prims.encoder(USERNAME,key))
         while True:
             data = s.recv(1024).decode()
             print (data)

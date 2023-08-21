@@ -96,9 +96,18 @@ def diffie(conn):
     #Send two public numbers (large prime, and a root prime)
     pass
 def encoder(msg,key):
-    pass
+    from cryptography.fernet import Fernet
+    key = Fernet(key)
+    if isinstance(msg,bytes):
+        return key.encrypt(msg)
+    return key.encrypt(encode())
+
 def decoder(msg,key):
-    pass
+    from cryptography.fernet import Fernet
+    key = Fernet(key)
+    if isinstance(msg,bytes):
+        return key.decrypt(msg)
+    return key.decrypt(msg.encode())
 
 def get_both(bits = 16):
     print("Start: {}".format(time.ctime()))
