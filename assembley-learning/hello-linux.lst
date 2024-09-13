@@ -1,0 +1,52 @@
+     1                                  bits 64
+     2                                  
+     3                                  section .data				;Data segment start
+     4 00000000 456E7465722061206E-     	userMsg db 'Enter a number: '	;Ask the user to enter a number
+     4 00000009 756D6265723A20     
+     5                                  	lenUserMsg equ $-userMsg
+     6 00000010 596F75206861766520-     	dispMsg db 'You have entered: '	;Print out final thing
+     6 00000019 656E74657265643A20 
+     7                                  	lenDispMsg equ $-dispMsg
+     8                                  
+     9                                  section .bss		; Unitialized data
+    10 00000000 ??????????              	num resb 5
+    11                                  
+    12                                  section .text		; Actual code segment
+    13                                  	global _start
+    14                                  
+    15                                  _start:
+    16 00000000 B804000000              	mov rax, 4
+    17 00000005 BB01000000              	mov rbx, 1
+    18 0000000A 48B9-                   	mov rcx, userMsg
+    18 0000000C [0000000000000000] 
+    19 00000014 BA10000000              	mov rdx, lenUserMsg
+    20 00000019 CD80                    	int 80h
+    21                                  
+    22                                  	;Read and store user input
+    23 0000001B B803000000              	mov rax, 3
+    24 00000020 BB02000000              	mov rbx, 2
+    25 00000025 48B9-                   	mov rcx, num
+    25 00000027 [0000000000000000] 
+    26 0000002F BA05000000              	mov rdx, 5	; 5 bytes(numer, 1 for sign)
+    27 00000034 CD80                    	int 80h
+    28                                  
+    29                                  	;Output the message 'The entered number is: '
+    30 00000036 B804000000              	mov rax, 4
+    31 0000003B BB01000000              	mov rbx, 1
+    32 00000040 48B9-                   	mov rcx, dispMsg
+    32 00000042 [1000000000000000] 
+    33 0000004A BA12000000              	mov rdx, lenDispMsg
+    34 0000004F CD80                    	int 80h
+    35                                  
+    36                                  	; Output the number entered
+    37 00000051 B804000000              	mov rax, 4
+    38 00000056 BB01000000              	mov rbx, 1
+    39 0000005B 48B9-                   	mov rcx, num
+    39 0000005D [0000000000000000] 
+    40 00000065 BA05000000              	mov rdx, 5
+    41 0000006A CD80                    	int 80h	
+    42                                  
+    43                                  	; Exit the code
+    44 0000006C B801000000              	mov rax, 1
+    45 00000071 BB00000000              	mov rbx, 0
+    46 00000076 CD80                    	int 80h
