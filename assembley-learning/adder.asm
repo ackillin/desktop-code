@@ -11,69 +11,69 @@ segment .data
 	len3 equ $- msg3
 
 segment .bss
-	num1 resb 2
-	num2 resb 2
-	res resb 1
+	num1 resq 4
+	num2 resq 4
+	res resq 2
 
 section .text
 	global _start	;must be declared for using gcc
 
 _start:
-	mov eax, 4
-	mov ebx, 1
-	mov ecx, msg1
-	mov edx, len1
+	mov rax, 4	;Sys_Write
+	mov rbx, 1	;Move to STD_OUT
+	mov rcx, msg1
+	mov rdx, len1
 	int 0x80
 
-	mov eax, 3
-	mov ebx, 0
-	mov ecx, num1
-	mov edx, 2
+	mov rax, 3	;Sys_Read (The user input)
+	mov rbx, 0	;STD_IN
+	mov rcx, num1
+	mov rdx, 2
 	int 0x80
 
-	mov eax, 4
-	mov ebx, 1
-	mov ecx, msg2
-	mov edx, len2
+	mov rax, 4
+	mov rbx, 1
+	mov rcx, msg2
+	mov rdx, len2
 	int 0x80
 
-	mov eax, 3
-	mov ebx, 0
-	mov ecx, num2
-	mov edx, 2
+	mov rax, 3
+	mov rbx, 0
+	mov rcx, num2
+	mov rdx, 2
 	int 0x80
 
-	mov eax, 4
-	mov ebx, 1
-	mov ecx, msg3
-	mov edx, len3
+	mov rax, 4
+	mov rbx, 1
+	mov rcx, msg3
+	mov rdx, len3
 	int 0x80
 
-	; moving the first number to eax register and second number to ebx
+	; moving the first number to rax register and second number to rbx
 	; and subtracting ascii '0' to convert it into a decmial number
 
-	mov eax, [num1]
-	sub eax, '0'
+	mov rax, [num1]
+	sub rax, '0'
 
-	mov ebx, [num2]
-	sub ebx, '0'
+	mov rbx, [num2]
+	sub rbx, '0'
 
-	; add eax and ebx
-	add eax, ebx
+	; add rax and rbx
+	add rax, rbx
 	; add '0' to convert the sum from decimal to ASCII
-	add eax, '0'
+	add rax, '0'
 
 	; storing the sum inmemory res
-	mov [res], eax
+	mov [res], rax
 	
 	; print the sum
-	mov eax, 4
-	mov ebx, 1
-	mov ecx, res
-	mov edx, 1
+	mov rax, 4
+	mov rbx, 1
+	mov rcx, res
+	mov rdx, 1
 	int 0x80
 
 exit:
-	mov eax, 1
-	xor ebx, ebx
+	mov rax, 1	;SYS_EXIT (1)
+	xor rbx, rbx	;Quickly set to 0
 	int 0x80

@@ -1,52 +1,40 @@
      1                                  bits 64
      2                                  
-     3                                  section .data				;Data segment start
-     4 00000000 456E7465722061206E-     	userMsg db 'Enter a number: '	;Ask the user to enter a number
-     4 00000009 756D6265723A20     
-     5                                  	lenUserMsg equ $-userMsg
-     6 00000010 596F75206861766520-     	dispMsg db 'You have entered: '	;Print out final thing
-     6 00000019 656E74657265643A20 
-     7                                  	lenDispMsg equ $-dispMsg
-     8                                  
-     9                                  section .bss		; Unitialized data
-    10 00000000 ??????????              	num resb 5
+     3                                  
+     4                                  section .data
+     5 00000000 4576656E204E756D62-         even_msg db 'Even Number!', 0xA, 0xD
+     5 00000009 6572210A0D         
+     6                                      len1 equ $-even_msg
+     7                                  
+     8 0000000E 4F64645F4E756D6265-         odd_msg db 'Odd_Number!'
+     8 00000017 7221               
+     9                                      len2 equ $-odd_msg
+    10                                  
     11                                  
-    12                                  section .text		; Actual code segment
-    13                                  	global _start
+    12                                  section .text
+    13                                      global _start
     14                                  
     15                                  _start:
-    16 00000000 B804000000              	mov rax, 4
-    17 00000005 BB01000000              	mov rbx, 1
-    18 0000000A 48B9-                   	mov rcx, userMsg
-    18 0000000C [0000000000000000] 
-    19 00000014 BA10000000              	mov rdx, lenUserMsg
-    20 00000019 CD80                    	int 80h
-    21                                  
-    22                                  	;Read and store user input
-    23 0000001B B803000000              	mov rax, 3
-    24 00000020 BB02000000              	mov rbx, 2
-    25 00000025 48B9-                   	mov rcx, num
-    25 00000027 [0000000000000000] 
-    26 0000002F BA05000000              	mov rdx, 5	; 5 bytes(numer, 1 for sign)
-    27 00000034 CD80                    	int 80h
-    28                                  
-    29                                  	;Output the message 'The entered number is: '
-    30 00000036 B804000000              	mov rax, 4
-    31 0000003B BB01000000              	mov rbx, 1
-    32 00000040 48B9-                   	mov rcx, dispMsg
-    32 00000042 [1000000000000000] 
-    33 0000004A BA12000000              	mov rdx, lenDispMsg
-    34 0000004F CD80                    	int 80h
+    16 00000000 66B80800                    mov ax, 8h
+    17 00000004 6683E001                    and ax, 1
+    18 00000008 7418                        jz evnn     ;Jump to even if previous was true
+    19                                  
+    20                                      ; Start odd Section
+    21 0000000A B804000000                  mov eax, 4
+    22 0000000F BB01000000                  mov ebx, 1
+    23 00000014 B9[0E000000]                mov ecx, odd_msg
+    24 00000019 BA0B000000                  mov edx, len2
+    25 0000001E CD80                        int 0x80
+    26 00000020 EB18                        jmp outprog
+    27                                  
+    28                                  evnn:
+    29 00000022 B409                        mov ah, 09h
+    30 00000024 B804000000                  mov eax, 4
+    31 00000029 BB01000000                  mov ebx, 1
+    32 0000002E B9[00000000]                mov ecx, even_msg
+    33 00000033 BA0E000000                  mov edx, len1
+    34 00000038 CD80                        int 0x80
     35                                  
-    36                                  	; Output the number entered
-    37 00000051 B804000000              	mov rax, 4
-    38 00000056 BB01000000              	mov rbx, 1
-    39 0000005B 48B9-                   	mov rcx, num
-    39 0000005D [0000000000000000] 
-    40 00000065 BA05000000              	mov rdx, 5
-    41 0000006A CD80                    	int 80h	
-    42                                  
-    43                                  	; Exit the code
-    44 0000006C B801000000              	mov rax, 1
-    45 00000071 BB00000000              	mov rbx, 0
-    46 00000076 CD80                    	int 80h
+    36                                  outprog:
+    37 0000003A B801000000                  mov eax,1
+    38 0000003F CD80                        int 0x80
